@@ -2,6 +2,26 @@ let score = 0;
 const gameArea = document.getElementById('game-area');
 const scoreElement = document.getElementById('score');
 
+// クリック時のサウンドを再生する関数
+function playClickSound() {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioCtx();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = 'sine';
+    oscillator.frequency.value = 440;
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start();
+
+    setTimeout(() => {
+        oscillator.stop();
+        audioCtx.close();
+    }, 100);
+}
+
 // ボールを生成する関数
 function createBall() {
     const ball = document.createElement('div');
@@ -15,6 +35,7 @@ function createBall() {
     
     // クリックイベントの追加
     ball.addEventListener('click', () => {
+        playClickSound();
         score += 1;
         scoreElement.textContent = score;
         ball.remove();
